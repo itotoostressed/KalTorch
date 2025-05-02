@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">My Application</string>
+    <!-- Navigation Labels -->
+    <string name="title_home">Home</string>
+    <string name="title_calorie">Calories</string>
+    <string name="title_calculator">Calculator</string>
+    <string name="title_profile">Profile</string>
+</resources>

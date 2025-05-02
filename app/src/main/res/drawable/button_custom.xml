@@ -1,0 +1,8 @@
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <corners android:radius="16dp" />  <!-- Increased for better appearance -->
+    <solid android:color="#008080" />   <!-- Teal background -->
+    <stroke
+        android:width="2dp"
+        android:color="#FF018786" />    <!-- Darker teal border -->
+</shape>
