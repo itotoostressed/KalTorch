@@ -2,14 +2,18 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/navigation_menu"
-        android:icon="@drawable/ic_launcher_foreground"
+        android:icon="@drawable/home"
         android:title="Menu" />
     <item
-        android:id="@+id/navigation_calorie"
-        android:icon="@drawable/ic_launcher_foreground"
-        android:title="Calories" />
+        android:id="@+id/navigation_diet"
+        android:icon="@drawable/food"
+        android:title="Diet" />
     <item
         android:id="@+id/navigation_workout"
-        android:icon="@drawable/ic_launcher_foreground"
+        android:icon="@drawable/biceps"
         android:title="Workout" />
+    <item
+        android:id="@+id/navigation_calorie"
+        android:icon="@drawable/fire"
+        android:title="Calories" />
 </menu>

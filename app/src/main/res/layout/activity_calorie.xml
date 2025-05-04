@@ -41,6 +41,63 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/progressBar" />
 
+    <!-- Meal Input Layout - Initially invisible -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/mealInputLayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:background="@drawable/button_custom"
+        android:padding="10dp"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/addCalories">
+
+        <EditText
+            android:id="@+id/editFoodName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:hint="Food name"
+            android:inputType="text"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <EditText
+            android:id="@+id/editCalories"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:hint="Calories"
+            android:inputType="number"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/editFoodName" />
+
+        <Button
+            android:id="@+id/btnSaveMeal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Save"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/editCalories" />
+
+        <Button
+            android:id="@+id/btnCancelMeal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:text="Cancel"
+            app:layout_constraintEnd_toStartOf="@id/btnSaveMeal"
+            app:layout_constraintTop_toBottomOf="@id/editCalories" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
     <Button
         android:id="@+id/addWorkout"
         android:layout_width="0dp"
@@ -51,7 +108,7 @@
         android:text="Add Workout"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/addCalories" />
+        app:layout_constraintTop_toBottomOf="@id/mealInputLayout" />
 
     <ListView
         android:id="@+id/resultListView"

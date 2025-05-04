@@ -34,15 +34,15 @@ public class BottomNavigationActivity extends AppCompatActivity {
                 // Handle navigation item clicks
                 if (itemId == R.id.navigation_menu) {
                     startActivity(new Intent(this, MenuActivity.class));
-//                    overridePendingTransition(0, 0); // No animation
                     return true;
                 } else if (itemId == R.id.navigation_calorie) {
                     startActivity(new Intent(this, CalorieActivity.class));
-//                    overridePendingTransition(0, 0); // No animation
                     return true;
                 } else if (itemId == R.id.navigation_workout) {
                     startActivity(new Intent(this, WorkoutActivity.class));
-//                    overridePendingTransition(0, 0);
+                    return true;
+                } else if (itemId == R.id.navigation_diet) {
+                    startActivity(new Intent(this, MainActivity.class));
                     return true;
                 }
 

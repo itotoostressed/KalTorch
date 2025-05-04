@@ -5,10 +5,14 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import java.util.ArrayList;
 
 public class CalorieActivity extends BottomNavigationActivity {
@@ -17,6 +21,9 @@ public class CalorieActivity extends BottomNavigationActivity {
     private ListView itemsListView;
     private ArrayList<String> calorieItems;
     private ArrayAdapter<String> adapter;
+    private ConstraintLayout mealInputLayout;
+    private EditText editFoodName;
+    private EditText editCalories;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +39,9 @@ public class CalorieActivity extends BottomNavigationActivity {
         // Initialize views
         progressBar = findViewById(R.id.progressBar);
         itemsListView = findViewById(R.id.resultListView);
+        mealInputLayout = findViewById(R.id.mealInputLayout);
+        editFoodName = findViewById(R.id.editFoodName);
+        editCalories = findViewById(R.id.editCalories);
 
         // Setup progress bar
         progressBar.setMax(user.getDailyGoal());
@@ -48,8 +58,10 @@ public class CalorieActivity extends BottomNavigationActivity {
         itemsListView.setAdapter(adapter);
 
         // Button listeners
-        findViewById(R.id.addCalories).setOnClickListener(v -> addNewMeal());
+        findViewById(R.id.addCalories).setOnClickListener(v -> showMealInputLayout());
         findViewById(R.id.addWorkout).setOnClickListener(v -> addNewWorkout());
+        findViewById(R.id.btnSaveMeal).setOnClickListener(v -> saveMeal());
+        findViewById(R.id.btnCancelMeal).setOnClickListener(v -> hideMealInputLayout());
 
         // List item click
         itemsListView.setOnItemClickListener((parent, view, position, id) -> {
@@ -74,11 +86,40 @@ public class CalorieActivity extends BottomNavigationActivity {
         });
     }
 
-    private void addNewMeal() {
-        int calories = 500;
-        calorieItems.add("Meal: " + calories + " kcal");
-        user.addCalories(calories);
-        updateListAndProgress();
+    private void showMealInputLayout() {
+        mealInputLayout.setVisibility(View.VISIBLE);
+        editFoodName.setText("");
+        editCalories.setText("");
+    }
+
+    private void hideMealInputLayout() {
+        mealInputLayout.setVisibility(View.GONE);
+    }
+
+    private void saveMeal() {
+        try {
+            String foodName = editFoodName.getText().toString().trim();
+            String caloriesText = editCalories.getText().toString().trim();
+
+            if (foodName.isEmpty() || caloriesText.isEmpty()) {
+                Toast.makeText(this, "Please fill all fields", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            int calories = Integer.parseInt(caloriesText);
+            if (calories <= 0) {
+                Toast.makeText(this, "Calories must be positive", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            calorieItems.add(foodName + ": " + calories + " kcal");
+            user.addCalories(calories);
+            updateListAndProgress();
+            hideMealInputLayout();
+
+        } catch (NumberFormatException e) {
+            Toast.makeText(this, "Please enter a valid number for calories", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void addNewWorkout() {
