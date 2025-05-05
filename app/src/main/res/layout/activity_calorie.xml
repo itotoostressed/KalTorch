@@ -10,13 +10,14 @@
     <TextView
         android:id="@+id/caloriesLabel"
         android:layout_width="100dp"
-        android:layout_height="20dp"
+        android:layout_height="22dp"
         android:layout_margin="5dp"
+        android:layout_marginTop="8dp"
         android:text="Calories"
-        android:layout_marginTop="16dp"
-        android:layout_marginStart="20dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:textSize="20dp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_editor_absoluteX="20dp" />
 
     <ProgressBar
         android:id="@+id/progressBar"
@@ -25,6 +26,7 @@
         android:layout_height="16dp"
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
+        android:layout_marginTop="10dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/caloriesLabel" />
@@ -33,7 +35,7 @@
         android:id="@+id/addCalories"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="15dp"
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
         android:text="Add Meal"
@@ -110,19 +112,74 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/mealInputLayout" />
 
+    <!-- Add this after the mealInputLayout but before the ListView -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/workoutInputLayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:background="@drawable/button_custom"
+        android:padding="10dp"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/addWorkout">
+
+        <EditText
+            android:id="@+id/editWorkoutName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:hint="Workout name"
+            android:inputType="textCapWords"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <EditText
+            android:id="@+id/editWorkoutCalories"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:hint="Calories burned"
+            android:inputType="number"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/editWorkoutName" />
+
+        <Button
+            android:id="@+id/btnSaveWorkout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Save"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/editWorkoutCalories" />
+
+        <Button
+            android:id="@+id/btnCancelWorkout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:text="Cancel"
+            app:layout_constraintEnd_toStartOf="@id/btnSaveWorkout"
+            app:layout_constraintTop_toBottomOf="@id/editWorkoutCalories" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
     <ListView
         android:id="@+id/resultListView"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginEnd="20dp"
+        android:layout_margin="20dp"
         android:background="@drawable/button_custom"
         android:fastScrollEnabled="true"
         android:scrollbars="vertical"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/addWorkout"
+        app:layout_constraintTop_toBottomOf="@id/workoutInputLayout"
         app:layout_constraintBottom_toTopOf="@id/bottom_navigation" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView

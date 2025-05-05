@@ -1,16 +1,19 @@
 package com.example.myapplication;
 
 import android.animation.ObjectAnimator;
+import android.app.AlertDialog;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import java.util.ArrayList;
@@ -24,6 +27,9 @@ public class CalorieActivity extends BottomNavigationActivity {
     private ConstraintLayout mealInputLayout;
     private EditText editFoodName;
     private EditText editCalories;
+    private ConstraintLayout workoutInputLayout;
+    private EditText editWorkoutName;
+    private EditText editWorkoutCalories;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +48,9 @@ public class CalorieActivity extends BottomNavigationActivity {
         mealInputLayout = findViewById(R.id.mealInputLayout);
         editFoodName = findViewById(R.id.editFoodName);
         editCalories = findViewById(R.id.editCalories);
+        workoutInputLayout = findViewById(R.id.workoutInputLayout);
+        editWorkoutName = findViewById(R.id.editWorkoutName);
+        editWorkoutCalories = findViewById(R.id.editWorkoutCalories);
 
         // Setup progress bar
         progressBar.setMax(user.getDailyGoal());
@@ -59,9 +68,11 @@ public class CalorieActivity extends BottomNavigationActivity {
 
         // Button listeners
         findViewById(R.id.addCalories).setOnClickListener(v -> showMealInputLayout());
-        findViewById(R.id.addWorkout).setOnClickListener(v -> addNewWorkout());
+        findViewById(R.id.addWorkout).setOnClickListener(v -> showWorkoutInputLayout());
         findViewById(R.id.btnSaveMeal).setOnClickListener(v -> saveMeal());
         findViewById(R.id.btnCancelMeal).setOnClickListener(v -> hideMealInputLayout());
+        findViewById(R.id.btnSaveWorkout).setOnClickListener(v -> saveWorkout());
+        findViewById(R.id.btnCancelWorkout).setOnClickListener(v -> hideWorkoutInputLayout());
 
         // List item click
         itemsListView.setOnItemClickListener((parent, view, position, id) -> {
@@ -86,7 +97,50 @@ public class CalorieActivity extends BottomNavigationActivity {
         });
     }
 
+    private void showWorkoutInputLayout() {
+        workoutInputLayout.setVisibility(View.VISIBLE);
+        editWorkoutName.setText("");
+        editWorkoutCalories.setText("");
+    }
+
+    private void hideWorkoutInputLayout() {
+        workoutInputLayout.setVisibility(View.GONE);
+    }
+
+    private void saveWorkout() {
+        try {
+            String name = editWorkoutName.getText().toString().trim();
+            String caloriesText = editWorkoutCalories.getText().toString().trim();
+
+            if (name.isEmpty() || caloriesText.isEmpty()) {
+                Toast.makeText(this, "Please fill all fields", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            int calories = Integer.parseInt(caloriesText);
+            if (calories <= 0) {
+                Toast.makeText(this, "Calories must be positive", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            // Add workout with negative calories
+            String workoutItem = "[Workout] " + name + ": -" + calories + " kcal";
+            calorieItems.add(workoutItem);
+            user.addCalories(-calories);
+            updateListAndProgress();
+            hideWorkoutInputLayout();
+            Toast.makeText(this, "Workout added successfully", Toast.LENGTH_SHORT).show();
+
+        } catch (NumberFormatException e) {
+            Toast.makeText(this, "Please enter valid numbers", Toast.LENGTH_SHORT).show();
+        }
+    }
+
     private void showMealInputLayout() {
+        if (user.getCurrentCalories() > user.getDailyGoal()) {
+            Toast.makeText(this, "Cannot add more calories - daily limit reached", Toast.LENGTH_SHORT).show();
+            return;
+        }
         mealInputLayout.setVisibility(View.VISIBLE);
         editFoodName.setText("");
         editCalories.setText("");
@@ -122,13 +176,6 @@ public class CalorieActivity extends BottomNavigationActivity {
         }
     }
 
-    private void addNewWorkout() {
-        int calories = 300;
-        calorieItems.add("Workout: -" + calories + " kcal");
-        user.addCalories(-calories);
-        updateListAndProgress();
-    }
-
     private void updateListAndProgress() {
         adapter.notifyDataSetChanged();
         user.saveUserData(this);
@@ -147,34 +194,40 @@ public class CalorieActivity extends BottomNavigationActivity {
     }
 
     private void updateProgressColor() {
-        try {
-            float percentage = ((float)user.getCurrentCalories() / user.getDailyGoal()) * 100;
+        if (user.getCurrentCalories() > user.getDailyGoal()) {
+            new AlertDialog.Builder(CalorieActivity.this)
+                    .setTitle("Calorie Limit Reached")
+                    .setMessage("You've exceeded your daily calorie goal! Adding more calories will be disabled.")
+                    .setPositiveButton("OK", null)
+                    .setCancelable(false)
+                    .show();
+        }
+        else {
+            try {
+                float percentage = ((float)user.getCurrentCalories() / user.getDailyGoal()) * 100;
 
-            Drawable progressDrawable = progressBar.getProgressDrawable();
-            if (progressDrawable == null) return;
+                Drawable progressDrawable = progressBar.getProgressDrawable();
+                if (progressDrawable == null) return;
 
-            // Safely get the progress layer
-            Drawable progressLayer = null;
-            if (progressDrawable instanceof LayerDrawable) {
-                progressLayer = ((LayerDrawable) progressDrawable)
-                        .findDrawableByLayerId(android.R.id.progress);
+                Drawable progressLayer = null;
+                if (progressDrawable instanceof LayerDrawable) {
+                    progressLayer = ((LayerDrawable) progressDrawable)
+                            .findDrawableByLayerId(android.R.id.progress);
+                }
+
+                if (progressLayer instanceof GradientDrawable) {
+                    GradientDrawable gradient = (GradientDrawable) progressLayer;
+                    progressBar.post(() -> {
+                        if (progressBar.getWidth() > 0) {
+                            float gradientIntensity = percentage/100f;
+                            gradient.setGradientRadius(progressBar.getWidth() * gradientIntensity);
+                            progressBar.invalidate();
+                        }
+                    });
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-
-            // Only proceed if we have a GradientDrawable
-            if (progressLayer instanceof GradientDrawable) {
-                GradientDrawable gradient = (GradientDrawable) progressLayer;
-
-                // Wait until view has proper dimensions
-                progressBar.post(() -> {
-                    if (progressBar.getWidth() > 0) {
-                        float gradientIntensity = percentage/100f;
-                        gradient.setGradientRadius(progressBar.getWidth() * gradientIntensity);
-                        progressBar.invalidate();
-                    }
-                });
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 

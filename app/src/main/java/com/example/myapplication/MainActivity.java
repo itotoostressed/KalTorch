@@ -2,8 +2,11 @@ package com.example.myapplication;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.*;
 import org.apache.commons.math3.optim.*;
 import org.apache.commons.math3.optim.linear.*;
@@ -293,17 +296,35 @@ public class MainActivity extends BottomNavigationActivity {
                     foodNamesList.get(i),
                     amounts[i],
                     costPerServingList.get(i) * amounts[i],
-                    proteinPerServingList.get(i) * amounts[i]);
+                    proteinPerServingList.get(i) * amounts[i],
+                    caloriePerServingList.get(i)*amounts[i]);
         }
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(
                 this,
                 android.R.layout.simple_list_item_1,
                 results
-        );
-        resultListView.setAdapter(adapter);
+        ) {
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent) {
+                View view = super.getView(position, convertView, parent);
+                TextView textView = (TextView) view.findViewById(android.R.id.text1);
+                textView.setPadding(
+                        dpToPx(8),  // left
+                        dpToPx(8),  // top
+                        dpToPx(8),  // right
+                        dpToPx(8)   // bottom
+                );
 
-        // Save results
+                return view;
+            }
+
+            private int dpToPx(int dp) {
+                return (int) (dp * getResources().getDisplayMetrics().density);
+            }
+        };
+
+        resultListView.setAdapter(adapter);
         saveResults(amounts);
     }
 
