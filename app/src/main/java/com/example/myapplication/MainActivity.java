@@ -30,9 +30,10 @@ public class MainActivity extends BottomNavigationActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Setup bottom navigation first - just like CalorieActivity does
+        // Setup bottom navigation
         setupBottomNavigation();
 
+        // Initialize views
         budgetField = findViewById(R.id.budgetField);
         weightField = findViewById(R.id.weightField);
         calculateButton = findViewById(R.id.calculateButton);
@@ -42,20 +43,32 @@ public class MainActivity extends BottomNavigationActivity {
         deleteItemButton = findViewById(R.id.deleteItemButton);
         resultListView = findViewById(R.id.resultListView);
 
-        // Initialize with previous results if available
+        // Load saved food items
+        loadSavedFoodItems();
+
+        // Show all food items immediately on launch
+        refreshFoodListView();
+
+        // Then check for previous results
         showPreviousResults();
 
+        // Set click listeners
         calculateButton.setOnClickListener(v -> calculateOptimalDiet());
         previousResultButton.setOnClickListener(v -> showPreviousResults());
         addItemButton.setOnClickListener(v -> showAddItemDialog());
         viewFoodsButton.setOnClickListener(v -> showFoodList());
         deleteItemButton.setOnClickListener(v -> showDeleteFoodDialog());
-
-        // Load saved food items if available
-        loadSavedFoodItems();
     }
 
     private void loadSavedFoodItems() {
+        // Clear any previously loaded custom items (but keep the default 5)
+        while (foodNamesList.size() > 5) {
+            foodNamesList.remove(5);
+            proteinPerServingList.remove(5);
+            costPerServingList.remove(5);
+            caloriePerServingList.remove(5);
+        }
+
         String savedItems = getSharedPreferences("FoodItems", MODE_PRIVATE)
                 .getString("items", "");
 
@@ -64,11 +77,6 @@ public class MainActivity extends BottomNavigationActivity {
             for (String item : items) {
                 String[] parts = item.split("\\|");
                 if (parts.length == 4) {
-                    // Skip if it's one of our default items
-                    if (foodNamesList.contains(parts[0])) {
-                        continue;
-                    }
-
                     try {
                         foodNamesList.add(parts[0]);
                         proteinPerServingList.add(Double.parseDouble(parts[1]));
@@ -145,6 +153,9 @@ public class MainActivity extends BottomNavigationActivity {
                 // Save the updated food items
                 saveFoodItems();
 
+                // Refresh the ListView
+                refreshFoodListView();
+
                 Toast.makeText(MainActivity.this, "Food item added successfully", Toast.LENGTH_SHORT).show();
             } catch (NumberFormatException e) {
                 Toast.makeText(MainActivity.this, "Please enter valid numbers", Toast.LENGTH_SHORT).show();
@@ -169,6 +180,7 @@ public class MainActivity extends BottomNavigationActivity {
                 .edit()
                 .putString("items", sb.toString())
                 .apply();
+        showPreviousResults();
     }
 
     private void showFoodList() {
@@ -190,13 +202,11 @@ public class MainActivity extends BottomNavigationActivity {
     }
 
     private void showDeleteFoodDialog() {
-        // Don't allow deletion of default items
         if (foodNamesList.size() <= 5) {
             Toast.makeText(this, "No custom food items to delete", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        // Create a list of custom food items
         String[] customFoods = new String[foodNamesList.size() - 5];
         for (int i = 5; i < foodNamesList.size(); i++) {
             customFoods[i - 5] = foodNamesList.get(i);
@@ -205,21 +215,19 @@ public class MainActivity extends BottomNavigationActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Delete Food Item");
         builder.setItems(customFoods, (dialog, which) -> {
-            // Confirm deletion
-            final int itemToDelete = which + 5; // Adjust index to account for default items
+            final int itemToDelete = which + 5;
 
             new AlertDialog.Builder(MainActivity.this)
                     .setTitle("Confirm Deletion")
                     .setMessage("Are you sure you want to delete " + foodNamesList.get(itemToDelete) + "?")
                     .setPositiveButton("Yes", (dialogInterface, i) -> {
-                        // Remove the item
                         foodNamesList.remove(itemToDelete);
                         proteinPerServingList.remove(itemToDelete);
                         costPerServingList.remove(itemToDelete);
                         caloriePerServingList.remove(itemToDelete);
 
-                        // Save the updated food items
                         saveFoodItems();
+                        refreshFoodListView();
 
                         Toast.makeText(MainActivity.this, "Food item deleted", Toast.LENGTH_SHORT).show();
                     })
@@ -346,7 +354,6 @@ public class MainActivity extends BottomNavigationActivity {
                 .getString("lastResults", "");
 
         if (saved.isEmpty()) {
-            // Initialize with empty data to ensure ListView is visible
             String[] emptyResults = new String[foodNamesList.size()];
             for (int i = 0; i < foodNamesList.size(); i++) {
                 emptyResults[i] = foodNamesList.get(i) + ": 0.00 servings (Cost: $0.00, Protein: 0.0g)";
@@ -361,12 +368,39 @@ public class MainActivity extends BottomNavigationActivity {
             return;
         }
 
-        // Parse saved results
+        // Filter out results for deleted items
+        List<String> validResults = new ArrayList<>();
         String[] items = saved.split(";");
+        for (String item : items) {
+            String foodName = item.split(":")[0];
+            if (foodNamesList.contains(foodName)) {
+                validResults.add(item);
+            }
+        }
+
+        // If no valid results, show empty state
+        if (validResults.isEmpty()) {
+            validResults.add("No previous results available");
+        }
+
         ArrayAdapter<String> adapter = new ArrayAdapter<>(
                 this,
                 android.R.layout.simple_list_item_1,
-                items
+                validResults
+        );
+        resultListView.setAdapter(adapter);
+    }
+    private void refreshFoodListView() {
+        String[] displayItems = new String[foodNamesList.size()];
+        for (int i = 0; i < foodNamesList.size(); i++) {
+            displayItems[i] = String.format("%s: 0.00 servings (Cost: $0.00, Protein: 0.0g, Calories: 0)",
+                    foodNamesList.get(i));
+        }
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(
+                this,
+                android.R.layout.simple_list_item_1,
+                displayItems
         );
         resultListView.setAdapter(adapter);
     }

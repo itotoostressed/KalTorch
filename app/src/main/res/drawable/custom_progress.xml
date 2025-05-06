@@ -1,19 +1,18 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:id="@android:id/background">
         <shape>
-            <corners android:radius="8dp"/>
-            <solid android:color="#3AFFFFFF"/>
+            <corners android:radius="6dp"/>
+            <solid android:color="#4DFFFFFF"/> <!-- Light gray track -->
         </shape>
     </item>
     <item android:id="@android:id/progress">
         <scale android:scaleWidth="100%">
             <shape>
-                <corners android:radius="8dp"/>
+                <corners android:radius="6dp"/>
                 <gradient
-                    android:startColor="#FF81C784"
-                    android:endColor="#FF4CAF50"
-                    android:angle="0"
-                    android:type="linear"/>
+                    android:startColor="#FF4444"
+                    android:endColor="#FF6E6E"
+                    android:angle="0"/>
             </shape>
         </scale>
     </item>

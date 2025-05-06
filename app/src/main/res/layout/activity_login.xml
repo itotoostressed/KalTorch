@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#138072"
+    android:background="@color/bg_gray"
     android:orientation="vertical"
     android:padding="20dp">
 
@@ -12,42 +12,55 @@
         android:layout_marginBottom="30dp"
         android:gravity="center"
         android:text="Welcome to KalTorch!"
+        android:textColor="@color/accent_red"
         android:textSize="20sp"
         android:textStyle="bold" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Username:" />
+        android:text="Username:"
+        android:textColor="@color/text_white" />
 
     <EditText
         android:id="@+id/usernameField"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp" />
+        android:layout_marginBottom="20dp"
+        android:backgroundTint="@color/accent_red"
+        android:textColor="@color/text_white"
+        android:textColorHint="@color/text_gray" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Password:" />
+        android:text="Password:"
+        android:textColor="@color/text_white" />
 
     <EditText
         android:id="@+id/passwordField"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="30dp"
-        android:inputType="textPassword" />
+        android:backgroundTint="@color/accent_red"
+        android:inputType="textPassword"
+        android:textColor="@color/text_white"
+        android:textColorHint="@color/text_gray" />
 
     <Button
         android:id="@+id/loginButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Login" />
+        android:background="@drawable/button_custom"
+        android:text="Login"
+        android:textColor="@color/text_white" />
 
     <Button
         android:id="@+id/createAccountButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:text="Create Account" />
+        android:background="@drawable/button_custom"
+        android:text="Create Account"
+        android:textColor="@color/text_white" />
 </LinearLayout>

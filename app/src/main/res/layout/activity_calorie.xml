@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#138072">
+    android:background="@color/bg_gray">
 
     <TextView
         android:id="@+id/caloriesLabel"
@@ -14,9 +14,11 @@
         android:layout_margin="5dp"
         android:layout_marginTop="8dp"
         android:text="Calories"
+        android:textColor="@color/accent_red"
         android:textSize="20dp"
         android:textStyle="bold"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="@id/progressBar"
         tools:layout_editor_absoluteX="20dp" />
 
     <ProgressBar
@@ -38,12 +40,13 @@
         android:layout_marginTop="15dp"
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
+        android:background="@drawable/button_custom"
         android:text="Add Meal"
+        android:textColor="@color/text_white"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/progressBar" />
 
-    <!-- Meal Input Layout - Initially invisible -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/mealInputLayout"
         android:layout_width="0dp"
@@ -51,7 +54,7 @@
         android:layout_marginTop="10dp"
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
-        android:background="@drawable/button_custom"
+        android:background="@color/card_gray"
         android:padding="10dp"
         android:visibility="gone"
         app:layout_constraintStart_toStartOf="parent"
@@ -107,12 +110,13 @@
         android:layout_marginTop="10dp"
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
+        android:background="@drawable/button_custom"
         android:text="Add Workout"
+        android:textColor="@color/text_white"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/mealInputLayout" />
 
-    <!-- Add this after the mealInputLayout but before the ListView -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/workoutInputLayout"
         android:layout_width="0dp"
@@ -120,7 +124,7 @@
         android:layout_marginTop="10dp"
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
-        android:background="@drawable/button_custom"
+        android:background="@color/card_gray"
         android:padding="10dp"
         android:visibility="gone"
         app:layout_constraintStart_toStartOf="parent"
@@ -174,7 +178,7 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_margin="20dp"
-        android:background="@drawable/button_custom"
+        android:background="@color/accent_red"
         android:fastScrollEnabled="true"
         android:scrollbars="vertical"
         app:layout_constraintStart_toStartOf="parent"
@@ -186,7 +190,7 @@
         android:id="@+id/bottom_navigation"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:background="@color/teal_700"
+        android:background="@color/accent_red"
         app:itemIconTint="@drawable/bottom_nav_color_selector"
         app:itemTextColor="@drawable/bottom_nav_color_selector"
         app:labelVisibilityMode="labeled"

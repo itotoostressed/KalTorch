@@ -12,6 +12,10 @@
     <color name="bottom_nav_selected">#FFFFFF</color> <!-- White when selected -->
     <color name="bottom_nav_unselected">#80FFFFFF</color> <!-- Semi-transparent white -->
 
-    <!-- Color state list as a color (alternative approach) -->
-    <color name="bottom_nav_colors">#80FFFFFF</color> <!-- Fallback color -->
+    <!-- Light Black (Gray) and Red Theme -->
+    <color name="bg_gray">#2B2B2B</color> <!-- Light black (dark gray) -->
+    <color name="card_gray">#383838</color> <!-- Slightly darker for cards -->
+    <color name="accent_red">#FF4444</color> <!-- Vibrant red -->
+    <color name="text_white">#FFFFFF</color>
+    <color name="text_gray">#BDBDBD</color> <!-- Light gray for subtitles -->
 </resources>
