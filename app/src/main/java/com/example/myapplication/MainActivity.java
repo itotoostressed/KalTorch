@@ -27,9 +27,11 @@ public class MainActivity extends BottomNavigationActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        System.out.println("hello world");
         // Setup bottom navigation
         setupBottomNavigation();
 
