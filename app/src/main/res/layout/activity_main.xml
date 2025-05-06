@@ -64,19 +64,19 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:layout_marginEnd="5dp"
-                android:background="@drawable/button_custom"
+                style="@style/RedButtonStyle"
                 android:text="Calculate"
                 android:textColor="@color/text_white" />
 
             <Button
                 android:id="@+id/previousResultButton"
+                style="@style/RedButtonStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:layout_marginStart="5dp"
-                android:background="@drawable/button_custom"
-                android:text="Show Last Result"
-                android:textColor="@color/text_white" />
+                android:layout_weight="1"
+                android:text="Last result"
+                android:textColor="@color/text_white"/>
         </LinearLayout>
 
         <Button
@@ -85,6 +85,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:background="@drawable/button_custom"
+            style="@style/RedButtonStyle"
             android:text="Add New Food Item"
             android:textColor="@color/text_white"
             app:layout_constraintTop_toBottomOf="@id/buttonRow1" />
@@ -102,7 +103,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:background="@drawable/button_custom"
+                style="@style/RedButtonStyle"
                 android:text="View Foods"
                 android:textColor="@color/text_white" />
 
@@ -112,7 +113,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:layout_marginStart="5dp"
-                android:background="@drawable/button_custom"
+                style="@style/RedButtonStyle"
                 android:text="Delete Item"
                 android:textColor="@color/text_white" />
         </LinearLayout>

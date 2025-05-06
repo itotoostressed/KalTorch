@@ -105,6 +105,7 @@
         android:layout_marginHorizontal="16dp"
         android:layout_marginTop="8dp"
         android:background="@drawable/button_custom"
+        style="@style/RedButtonStyle"
         android:text="Login"
         android:textColor="@color/text_white"
         app:layout_constraintTop_toBottomOf="@id/loginTitle" />
@@ -129,6 +130,7 @@
         android:layout_marginHorizontal="16dp"
         android:layout_marginTop="8dp"
         android:background="@drawable/button_custom"
+        style="@style/RedButtonStyle"
         android:text="Calories"
         android:textColor="@color/text_white"
         app:layout_constraintTop_toBottomOf="@id/nutritionTitle" />
@@ -153,6 +155,7 @@
         android:layout_marginHorizontal="16dp"
         android:layout_marginTop="8dp"
         android:background="@drawable/button_custom"
+        style="@style/RedButtonStyle"
         android:text="Diet Calculator"
         android:textColor="@color/text_white"
         app:layout_constraintTop_toBottomOf="@id/toolsTitle" />
