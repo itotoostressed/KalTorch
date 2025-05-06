@@ -57,11 +57,12 @@ public class CalorieActivity extends BottomNavigationActivity {
         animateProgressBar(user.getCurrentCalories());
         updateProgressColor();
 
-        // Initialize list
+        // Initialize list with both food and workout items
         calorieItems = new ArrayList<>();
         calorieItems.add("Breakfast: 400 kcal");
         calorieItems.add("Lunch: 650 kcal");
         calorieItems.add("Snack: 200 kcal");
+        calorieItems.add("[Workout] Running: -300 kcal");  // Added base workout item
 
         adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, calorieItems);
         itemsListView.setAdapter(adapter);
@@ -74,25 +75,37 @@ public class CalorieActivity extends BottomNavigationActivity {
         findViewById(R.id.btnSaveWorkout).setOnClickListener(v -> saveWorkout());
         findViewById(R.id.btnCancelWorkout).setOnClickListener(v -> hideWorkoutInputLayout());
 
-        // List item click
+        // List item click - Fixed to properly handle negative calories from workouts
         itemsListView.setOnItemClickListener((parent, view, position, id) -> {
             String selectedItem = calorieItems.get(position);
             try {
                 String[] parts = selectedItem.split(":");
                 String caloriePart = parts[1].trim().split(" ")[0];
-                int calories = Integer.parseInt(caloriePart);
+                int calories;
 
-                if (selectedItem.contains("-")) {
-                    user.addCalories(-calories);
+                // Handle negative calories (for workouts)
+                if (caloriePart.startsWith("-")) {
+                    calories = Integer.parseInt(caloriePart);  // Already negative
                 } else {
-                    user.addCalories(calories);
+                    calories = Integer.parseInt(caloriePart);
                 }
+
+                // Apply calories based on item type
+                user.addCalories(calories);  // Will add or subtract based on sign
 
                 user.saveUserData(this);
                 updateProgress();
-                Toast.makeText(this, selectedItem + " applied", Toast.LENGTH_SHORT).show();
+
+                // Show appropriate message
+                if (calories < 0) {
+                    Toast.makeText(this, "Workout applied: " + (-calories) + " calories burned", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(this, "Food item applied: " + calories + " calories added", Toast.LENGTH_SHORT).show();
+                }
+
             } catch (Exception e) {
                 Toast.makeText(this, "Error processing item", Toast.LENGTH_SHORT).show();
+                e.printStackTrace();
             }
         });
     }
@@ -123,13 +136,16 @@ public class CalorieActivity extends BottomNavigationActivity {
                 return;
             }
 
-            // Add workout with negative calories
+            // Add workout with negative calories (to subtract from total)
             String workoutItem = "[Workout] " + name + ": -" + calories + " kcal";
             calorieItems.add(workoutItem);
+
+            // Subtract calories for workouts
             user.addCalories(-calories);
+
             updateListAndProgress();
             hideWorkoutInputLayout();
-            Toast.makeText(this, "Workout added successfully", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Workout added: " + calories + " calories burned", Toast.LENGTH_SHORT).show();
 
         } catch (NumberFormatException e) {
             Toast.makeText(this, "Please enter valid numbers", Toast.LENGTH_SHORT).show();

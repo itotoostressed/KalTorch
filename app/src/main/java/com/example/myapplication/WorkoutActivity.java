@@ -35,6 +35,9 @@ public class WorkoutActivity extends BottomNavigationActivity {
         btnCapture = findViewById(R.id.btnCapture);
         imageView = findViewById(R.id.imageView);
 
+        // Setup bottom navigation
+        setupBottomNavigation();
+
         btnCapture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
