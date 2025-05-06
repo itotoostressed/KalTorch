@@ -66,7 +66,9 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:hint="Food name"
+            android:textColorHint="@color/accent_red"
             android:inputType="text"
+            android:textColor="@color/accent_red"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -77,7 +79,9 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:hint="Calories"
+            android:textColorHint="@color/accent_red"
             android:inputType="number"
+            android:textColor="@color/accent_red"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/editFoodName" />
@@ -88,6 +92,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:text="Save"
+            style="@style/RedButtonStyle"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/editCalories" />
 
@@ -98,6 +103,7 @@
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:text="Cancel"
+            style="@style/RedButtonStyle"
             app:layout_constraintEnd_toStartOf="@id/btnSaveMeal"
             app:layout_constraintTop_toBottomOf="@id/editCalories" />
 
@@ -136,6 +142,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:hint="Workout name"
+            android:textColorHint="@color/accent_red"
+            android:textColor="@color/accent_red"
             android:inputType="textCapWords"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -147,6 +155,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:hint="Calories burned"
+            android:textColorHint="@color/accent_red"
+            android:textColor="@color/accent_red"
             android:inputType="number"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -158,6 +168,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:text="Save"
+            style="@style/RedButtonStyle"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/editWorkoutCalories" />
 
@@ -168,6 +179,7 @@
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:text="Cancel"
+            style="@style/RedButtonStyle"
             app:layout_constraintEnd_toStartOf="@id/btnSaveWorkout"
             app:layout_constraintTop_toBottomOf="@id/editWorkoutCalories" />
 
