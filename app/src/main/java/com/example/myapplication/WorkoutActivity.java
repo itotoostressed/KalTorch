@@ -109,6 +109,7 @@ public class WorkoutActivity extends BottomNavigationActivity {
         float[] rightShoulder = keypoints[0][0][6];
 
         Log.d("Angles", "Keypoints set");
+        String text = "";
 
         if (rightHip[2] > confidenceThreshold && rightKnee[2] > confidenceThreshold && rightAnkle[2] > confidenceThreshold) {
 
@@ -123,21 +124,21 @@ public class WorkoutActivity extends BottomNavigationActivity {
             double angle = Math.acos((Math.pow(kh, 2) + Math.pow(ka, 2) - Math.pow(ha, 2)) / (2 * kh * ka));
             double angleDegrees = Math.toDegrees(angle);
             Log.d("Angles", "Right leg angle: " + angleDegrees);
-            if (angle >= 100){
+            if (angleDegrees >= 90){
                 Log.d("Angles", "Tip: Squat a little deeper next time");
-                speechUtility.speak("Tip: Squat a little deeper next time");
+                text += "Tip: Squat a little deeper next time,";
             }
-            else if (angle <= 70)
+            else if (angleDegrees <= 65)
             {
                 Log.d("Angles", "Tip: You don't need to squat so deep");
-                speechUtility.speak("Tip: You don't need to squat so deep");
+                text += "Tip: You don't need to squat so deep,";
             }
             else {
                 Log.d("Angles", "Good squat depth!");
-                speechUtility.speak("Good squat depth!");
+                text += "Good squat depth!";
             }
         }
-        if (leftHip[2] > confidenceThreshold && leftKnee[2] > confidenceThreshold && leftAnkle[2] > confidenceThreshold) {
+        else if (leftHip[2] > confidenceThreshold && leftKnee[2] > confidenceThreshold && leftAnkle[2] > confidenceThreshold) {
 
             float hx = leftHip[1], hy = leftHip[0], hScore = leftHip[2];
             float kx = leftKnee[1], ky = leftKnee[0], kScore = leftKnee[2];
@@ -150,16 +151,20 @@ public class WorkoutActivity extends BottomNavigationActivity {
             double angle = Math.acos((Math.pow(kh, 2) + Math.pow(ka, 2) - Math.pow(ha, 2)) / (2 * kh * ka));
             double angleDegrees = Math.toDegrees(angle);
             Log.d("Angles", "Left leg angle: " + angleDegrees);
-            if (angle >= 100){
+            if (angleDegrees >= 90){
                 Log.d("Angles", "Tip: Squat a little deeper next time");
+                text += "Tip: Squat a little deeper next time,";
             }
-            else if (angle <= 70)
+            else if (angleDegrees <= 65)
             {
                 Log.d("Angles", "Tip: You don't need to squat so deep");
+                text += "Tip: You don't need to squat so deep,";
             }
             else {
                 Log.d("Angles", "Good squat depth!");
+                text += "Good squat depth!";
             }
+
         }
         if (rightHip[2] > confidenceThreshold && rightKnee[2] > confidenceThreshold && rightShoulder[2] > confidenceThreshold) {
 
@@ -174,20 +179,22 @@ public class WorkoutActivity extends BottomNavigationActivity {
             double angle = Math.acos((Math.pow(kh, 2) + Math.pow(hs, 2) - Math.pow(ks, 2)) / (2 * kh * hs));
             double angleDegrees = Math.toDegrees(angle);
             Log.d("Angles", "Right hip angle: " + angleDegrees);
-            if (angle >= 70){
+            if (angleDegrees >= 75){
                 Log.d("Angles", "Tip: Lean forward a bit");
-                speechUtility.speak("Tip: Lean forward a bit");
+                text += " Tip: Lean forward a bit,";
             }
-            else if (angle <= 50)
+            else if (angleDegrees <= 55)
             {
                 Log.d("Angles", "Tip: Lean back a bit");
-                speechUtility.speak("Tip: Lean back a bit");
+                text += " Tip: Lean back a bit,";
             }
             else {
                 Log.d("Angles", "Good back angle!");
-                speechUtility.speak("Good back angle!");
+                text += " Good back angle!";
             }
         }
+        Log.d("Angles", text);
+        speechUtility.speak(text);
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
