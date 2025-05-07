@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
+import android.util.Log;
+
 import org.apache.commons.math3.optim.*;
 import org.apache.commons.math3.optim.linear.*;
 import org.apache.commons.math3.optim.nonlinear.scalar.GoalType;
@@ -17,6 +19,9 @@ import java.util.Collection;
 import java.util.List;
 
 public class MainActivity extends BottomNavigationActivity {
+    private static final String TAG = "MainActivity";
+    private SpeechUtility speechUtility;
+
     private EditText budgetField, weightField;
     private Button calculateButton, previousResultButton, addItemButton, viewFoodsButton, deleteItemButton;
     private ListView resultListView;
@@ -27,11 +32,12 @@ public class MainActivity extends BottomNavigationActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        System.out.println("hello world");
+        speechUtility = new SpeechUtility(this, BuildConfig.OPENAI_API_KEY);
+
+
         // Setup bottom navigation
         setupBottomNavigation();
 
@@ -60,6 +66,127 @@ public class MainActivity extends BottomNavigationActivity {
         addItemButton.setOnClickListener(v -> showAddItemDialog());
         viewFoodsButton.setOnClickListener(v -> showFoodList());
         deleteItemButton.setOnClickListener(v -> showDeleteFoodDialog());
+    }
+
+    /**
+     * Setup specific voice commands for this activity
+     * This overrides the abstract method from VoiceCommandActivity
+     */
+    @Override
+    protected void setupActivityCommands() {
+        // Call the parent method to inherit all navigation commands
+        super.setupActivityCommands();
+
+        // Register diet-specific commands
+        registerCommand("calculate diet", "diet_calculate");
+        registerCommand("calculate optimal diet", "diet_calculate");
+        registerCommand("optimize diet", "diet_calculate");
+
+        registerCommand("show previous results", "diet_previous");
+        registerCommand("previous results", "diet_previous");
+
+        registerCommand("add food", "diet_add_food");
+        registerCommand("add item", "diet_add_food");
+        registerCommand("new food", "diet_add_food");
+
+        registerCommand("view foods", "diet_view_foods");
+        registerCommand("list foods", "diet_view_foods");
+        registerCommand("show foods", "diet_view_foods");
+
+        registerCommand("delete food", "diet_delete_food");
+        registerCommand("remove food", "diet_delete_food");
+
+        // Commands to set budget and weight
+        registerCommand("set budget", "diet_set_budget");
+        registerCommand("set weight", "diet_set_weight");
+
+        Log.d(TAG, "Diet voice commands registered");
+    }
+
+    /**
+     * Handle diet-specific voice commands
+     * Overrides the method from BottomNavigationActivity
+     */
+    @Override
+    protected void handleActivitySpecificCommands(String commandId) {
+        Log.d(TAG, "Handling diet command: " + commandId);
+
+        switch (commandId) {
+            case "diet_calculate":
+                announceAccessibility("Calculating optimal diet");
+                calculateOptimalDiet();
+                break;
+            case "diet_previous":
+                announceAccessibility("Showing previous results");
+                showPreviousResults();
+                break;
+            case "diet_add_food":
+                announceAccessibility("Opening add food dialog");
+                showAddItemDialog();
+                break;
+            case "diet_view_foods":
+                announceAccessibility("Showing food list");
+                showFoodList();
+                break;
+            case "diet_delete_food":
+                announceAccessibility("Opening delete food dialog");
+                showDeleteFoodDialog();
+                break;
+            case "diet_set_budget":
+                promptForBudget();
+                break;
+            case "diet_set_weight":
+                promptForWeight();
+                break;
+            default:
+                // If we don't recognize the command, let the parent try to handle it
+                super.handleActivitySpecificCommands(commandId);
+                break;
+        }
+    }
+
+    /**
+     * Voice command helper method to prompt for budget
+     */
+    private void promptForBudget() {
+        final EditText input = new EditText(this);
+        input.setInputType(android.text.InputType.TYPE_CLASS_NUMBER);
+        input.setHint("Enter budget in dollars");
+
+        new AlertDialog.Builder(this)
+                .setTitle("Set Budget")
+                .setView(input)
+                .setPositiveButton("OK", (dialog, which) -> {
+                    String budgetStr = input.getText().toString();
+                    if (!budgetStr.isEmpty()) {
+                        budgetField.setText(budgetStr);
+                        announceAccessibility("Budget set to " + budgetStr + " dollars");
+                    }
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
+    }
+
+    /**
+     * Voice command helper method to prompt for weight
+     */
+    private void promptForWeight() {
+        final EditText input = new EditText(this);
+        input.setInputType(android.text.InputType.TYPE_CLASS_NUMBER);
+        input.setHint("Enter your weight in kg");
+
+        new AlertDialog.Builder(this)
+                .setTitle("Set Weight")
+                .setView(input)
+                .setPositiveButton("OK", (dialog, which) -> {
+                    String weightStr = input.getText().toString();
+                    if (!weightStr.isEmpty()) {
+                        weightField.setText(weightStr);
+                        announceAccessibility("Weight set to " + weightStr + " kilograms");
+                    }
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
     }
 
     private void loadSavedFoodItems() {
@@ -291,11 +418,14 @@ public class MainActivity extends BottomNavigationActivity {
 
             if (solution != null) {
                 displayResults(solution.getPoint(), budget, weight);
+                announceAccessibility("Diet optimization complete");
             } else {
                 Toast.makeText(this, "No feasible solution", Toast.LENGTH_SHORT).show();
+                announceAccessibility("No feasible solution found");
             }
         } catch (NumberFormatException e) {
             Toast.makeText(this, "Please enter valid numbers", Toast.LENGTH_SHORT).show();
+            announceAccessibility("Please enter valid budget and weight values");
         }
     }
 
@@ -392,6 +522,7 @@ public class MainActivity extends BottomNavigationActivity {
         );
         resultListView.setAdapter(adapter);
     }
+
     private void refreshFoodListView() {
         String[] displayItems = new String[foodNamesList.size()];
         for (int i = 0; i < foodNamesList.size(); i++) {
@@ -405,5 +536,21 @@ public class MainActivity extends BottomNavigationActivity {
                 displayItems
         );
         resultListView.setAdapter(adapter);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (speechUtility != null) {
+            speechUtility.stopAudio();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (speechUtility != null) {
+            speechUtility.cleanup();
+        }
     }
 }

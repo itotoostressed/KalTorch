@@ -11,6 +11,7 @@ import androidx.annotation.Nullable;
 
 public class MenuActivity extends BottomNavigationActivity {
     private User user;
+    private SpeechUtility speechUtility;
 
     private void updateProgressAndColor(ProgressBar progressBar, int currentCalories, int dailyGoal) {
         try {
@@ -81,6 +82,11 @@ public class MenuActivity extends BottomNavigationActivity {
 
         // Setup bottom navigation
         setupBottomNavigation();
+
+        speechUtility = new SpeechUtility(this, BuildConfig.OPENAI_API_KEY);
+
+        speechUtility.speak("For help on voice commands, say help");
+
 
         try {
             user = User.getInstance();

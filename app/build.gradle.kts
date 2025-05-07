@@ -1,5 +1,14 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
+}
+
+val localProperties = Properties().apply {
+    val propertiesFile = rootProject.file("local.properties")
+    if (propertiesFile.exists()) {
+        load(propertiesFile.inputStream())
+    }
 }
 
 android {
@@ -13,7 +22,19 @@ android {
         versionCode = 1
         versionName = "1.0"
 
+        buildConfigField(
+            "String",
+            "OPENAI_API_KEY",
+            localProperties.getProperty("OPENAI_API_KEY") ?: "\"\""
+        )
+
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+    }
+
+
+    buildFeatures {
+        buildConfig = true
     }
 
     buildTypes {
@@ -32,6 +53,8 @@ android {
 }
 
 dependencies {
+    implementation("com.squareup.okhttp3:okhttp:4.12.0")
+    implementation("com.google.code.gson:gson:2.10.1")
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)

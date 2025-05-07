@@ -26,6 +26,7 @@ public class WorkoutActivity extends BottomNavigationActivity {
     private Interpreter tflite;
     Button btnCapture;
     ImageView imageView;
+    private SpeechUtility speechUtility;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +38,12 @@ public class WorkoutActivity extends BottomNavigationActivity {
 
         // Setup bottom navigation
         setupBottomNavigation();
+
+        // Initialize speech utility with your API key
+        speechUtility = new SpeechUtility(this, BuildConfig.OPENAI_API_KEY);
+
+        // Speak instruction when activity starts
+        speechUtility.speak("To take a picture, say take picture");
 
         btnCapture.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -118,13 +125,16 @@ public class WorkoutActivity extends BottomNavigationActivity {
             Log.d("Angles", "Right leg angle: " + angleDegrees);
             if (angle >= 100){
                 Log.d("Angles", "Tip: Squat a little deeper next time");
+                speechUtility.speak("Tip: Squat a little deeper next time");
             }
             else if (angle <= 70)
             {
                 Log.d("Angles", "Tip: You don't need to squat so deep");
+                speechUtility.speak("Tip: You don't need to squat so deep");
             }
             else {
                 Log.d("Angles", "Good squat depth!");
+                speechUtility.speak("Good squat depth!");
             }
         }
         if (leftHip[2] > confidenceThreshold && leftKnee[2] > confidenceThreshold && leftAnkle[2] > confidenceThreshold) {
@@ -166,13 +176,16 @@ public class WorkoutActivity extends BottomNavigationActivity {
             Log.d("Angles", "Right hip angle: " + angleDegrees);
             if (angle >= 70){
                 Log.d("Angles", "Tip: Lean forward a bit");
+                speechUtility.speak("Tip: Lean forward a bit");
             }
             else if (angle <= 50)
             {
                 Log.d("Angles", "Tip: Lean back a bit");
+                speechUtility.speak("Tip: Lean back a bit");
             }
             else {
                 Log.d("Angles", "Good back angle!");
+                speechUtility.speak("Good back angle!");
             }
         }
     }
@@ -208,5 +221,23 @@ public class WorkoutActivity extends BottomNavigationActivity {
     @Override
     protected int getNavigationMenuItemId(){
         return R.id.navigation_workout;
-    };
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        // Stop audio when activity is paused
+        if (speechUtility != null) {
+            speechUtility.stopAudio();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        // Make sure to clean up resources
+        if (speechUtility != null) {
+            speechUtility.cleanup();
+        }
+    }
 }
