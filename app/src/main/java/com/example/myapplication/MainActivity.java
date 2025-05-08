@@ -38,6 +38,7 @@ public class MainActivity extends BottomNavigationActivity {
         speechUtility = new SpeechUtility(this, BuildConfig.OPENAI_API_KEY);
 
 
+        speechUtility.speak("You're in the diet section");
         // Setup bottom navigation
         setupBottomNavigation();
 
@@ -99,6 +100,10 @@ public class MainActivity extends BottomNavigationActivity {
         // Commands to set budget and weight
         registerCommand("set budget", "diet_set_budget");
         registerCommand("set weight", "diet_set_weight");
+
+
+
+
 
         Log.d(TAG, "Diet voice commands registered");
     }

@@ -80,7 +80,7 @@ public abstract class BottomNavigationActivity extends VoiceCommandActivity impl
     @Override
     protected void setupActivityCommands() {
         // Register navigation commands
-        registerCommand("go to menu", "nav_to_menu");
+        registerCommand("menu screen", "nav_to_menu");
         registerCommand("open menu", "nav_to_menu");
 
         registerCommand("go to calories", "nav_to_calorie");

@@ -43,7 +43,7 @@ public class WorkoutActivity extends BottomNavigationActivity {
         speechUtility = new SpeechUtility(this, BuildConfig.OPENAI_API_KEY);
 
         // Speak instruction when activity starts
-        speechUtility.speak("To take a picture, say take picture");
+        speechUtility.speak("You're in the workout section, to take a picture, say take picture");
 
         btnCapture.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -223,6 +223,31 @@ public class WorkoutActivity extends BottomNavigationActivity {
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    protected void setupActivityCommands() {
+        // Call the parent method to inherit all navigation commands
+        super.setupActivityCommands();
+
+        // Register diet-specific commands
+        registerCommand("take picture", "take_picture");
+
+        //Log.d(TAG, "Diet voice commands registered");
+    }
+
+    @Override
+    protected void handleActivitySpecificCommands(String commandId) {
+        //Log.d(TAG, "Handling diet command: " + commandId);
+
+        switch (commandId) {
+            case "take_picture":
+                btnCapture.performClick();
+                break;
+            default:
+                // If we don't recognize the command, let the parent try to handle it
+                super.handleActivitySpecificCommands(commandId);
+                break;
+        }
     }
 
     @Override

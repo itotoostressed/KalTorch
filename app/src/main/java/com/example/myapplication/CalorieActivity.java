@@ -31,16 +31,25 @@ public class CalorieActivity extends BottomNavigationActivity {
     private EditText editWorkoutName;
     private EditText editWorkoutCalories;
 
+
+    //private SpeechUtility speechUtility;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_calorie);
+
+        //speechUtility.speak("You're in the calories activity");
+
 
         // Setup bottom navigation
         setupBottomNavigation();
 
         user = User.getInstance();
         user.loadUserData(this);
+
+
 
         // Initialize views
         progressBar = findViewById(R.id.progressBar);

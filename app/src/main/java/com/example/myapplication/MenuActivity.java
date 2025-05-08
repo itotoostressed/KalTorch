@@ -85,7 +85,7 @@ public class MenuActivity extends BottomNavigationActivity {
 
         speechUtility = new SpeechUtility(this, BuildConfig.OPENAI_API_KEY);
 
-        speechUtility.speak("For help on voice commands, say help");
+        speechUtility.speak("You're in the menu section, for help on voice commands, double click the volume button, say help, then double click to stop recording");
 
 
         try {
@@ -159,6 +159,33 @@ public class MenuActivity extends BottomNavigationActivity {
         ObjectAnimator.ofInt(progressBar, "progress", progressBar.getProgress(), newProgress)
                 .setDuration(500)
                 .start();
+    }
+
+    protected void setupActivityCommands() {
+        // Call the parent method to inherit all navigation commands
+        super.setupActivityCommands();
+
+        // Register diet-specific commands
+        registerCommand("help", "help");
+
+        //Log.d(TAG, "Diet voice commands registered");
+    }
+
+    @Override
+    protected void handleActivitySpecificCommands(String commandId) {
+        //Log.d(TAG, "Handling diet command: " + commandId);
+
+        switch (commandId) {
+            case "help":
+                speechUtility.speak("There are 4 different screens, menu, diet, workout and calorie. To navigate to them, just say the the name of the screen followed by screen. For example workout screen");
+
+                //btnCapture.performClick();
+                break;
+            default:
+                // If we don't recognize the command, let the parent try to handle it
+                super.handleActivitySpecificCommands(commandId);
+                break;
+        }
     }
 
     @Override

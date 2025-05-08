@@ -108,9 +108,16 @@ public abstract class VoiceCommandActivity extends AppCompatActivity {
         // Common navigation commands across all activities
         globalCommands.put("go home", "action_home");
         globalCommands.put("main screen", "action_home");
+        //globalCommands.put("menu screen", "action_home");
+
         globalCommands.put("diet screen", "action_diet");
+
         globalCommands.put("nutrition", "action_diet");
         globalCommands.put("workout screen", "action_workout");
+        globalCommands.put("go to work out", "action_workout");
+        globalCommands.put("go workout", "action_workout");
+
+
         globalCommands.put("exercise", "action_workout");
         globalCommands.put("profile", "action_profile");
         globalCommands.put("settings", "action_settings");
